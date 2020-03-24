@@ -5,6 +5,8 @@ PHOTO_URL = 'https://people.epfl.ch/private/common/photos/links/'
 
 
 def __is_sciper(sciper):
+    if isinstance(sciper, str):
+        sciper = int(sciper)
     if not str(sciper).isnumeric() or sciper < 100000 or sciper > 999999:
         return False
     else:
