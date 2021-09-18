@@ -1,0 +1,13 @@
+
+# IDE specific
+.idea
+
+# python package specific
+build/
+dist/
+*.egg-info
+__pycache__/
+
+# Macos specific
+.DS_Store
+
