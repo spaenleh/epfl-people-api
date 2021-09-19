@@ -1,8 +1,10 @@
-import subprocess
-from subprocess import PIPE, STDOUT
-import sys, os
-from pathlib import Path
+import os
 import re
+import subprocess
+import sys
+from pathlib import Path
+
+PACKAGE_NAME = "epflpeople"
 
 DEFAULT_ARG = 'test'
 ARGS = {
@@ -19,9 +21,7 @@ RE_VERSION_NUMBER = r"^\w*-([\da-z]+.[\da-z]+.[\da-z]+)"
 def main(mode):
     create_dist_dir()
     print(f'deploying as {mode}')
-    res = subprocess.check_output(f"find {os.getcwd()} -iname VERSION -not -path build".split(), encoding='utf-8').splitlines()
-    version_path = res[0].strip()
-    version = Path(version_path).read_text().strip()
+    version = get_version_file()
 
     # rotating the versions
     latest_dir = (DIST_FOLDER / LATEST)
@@ -116,6 +116,10 @@ def find_version():
     for root, dirs, files in os.walk(Path(__file__).parent):
         for name in files:
             print(name)
+
+
+def get_version_file():
+    return Path(os.path.join(PACKAGE_NAME, "VERSION")).read_text().strip()
 
 
 def print_help():
