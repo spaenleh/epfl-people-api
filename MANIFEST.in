@@ -1,0 +1,3 @@
+global-include VERSION
+global-include CHANGELOG
+prune build
