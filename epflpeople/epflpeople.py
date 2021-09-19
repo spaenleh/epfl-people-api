@@ -118,7 +118,7 @@ def find_first(search, format_output=False, **kwargs):
     except ConnectionError:
         return h('No connection, please check that you are connected', YELLOW)
     if format_output:
-        return pretty_print(res, **kwargs)
+        return pretty_print(res, search=search, **kwargs)
     else:
         return res
 

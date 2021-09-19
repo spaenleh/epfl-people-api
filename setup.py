@@ -36,4 +36,3 @@ setup(
         "Changelog": "https://github.com/spaenleh/epfl-people-api/blob/main/CHANGELOG.md",
     },
 )
-
