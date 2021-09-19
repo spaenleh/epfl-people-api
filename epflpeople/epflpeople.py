@@ -1,7 +1,41 @@
+import re
 import requests
+from errors import *
 
 SEARCH_URL = 'https://search.epfl.ch/json/ws_search.action'
 PHOTO_URL = 'https://people.epfl.ch/private/common/photos/links/'
+
+PP_PRINT = [
+    'firstname',
+    'name',
+    'position',
+    'unit',
+    'sciper',
+    'email',
+    'homepage',
+    'guest',
+    'unitPath',
+]
+ACCREDS = 'accreds'
+PP_PRINT_ACCREDS = [
+    'acronym',
+    'name',
+    'position',
+    'office',
+    'status',
+    'homepage',
+    'address',
+    'phones',
+    'officeList',
+    'phoneList',
+]
+
+COLOR_RESET = '\033[m'
+RED = '\033[31m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+GRAY = '\033[37m'
+GREEN = '\033[32m'
 
 
 def find_by_sciper(sciper, locale='en'):
@@ -23,9 +57,9 @@ def find_by_sciper(sciper, locale='en'):
         if len(response.text) > 2:
             return response.json()
         else:
-            return 'This person does not exist'
+            raise NoResultError
     else:
-        return 'External service not responding'
+        raise ServiceNotResponding
 
 
 def find(search, locale='en'):
@@ -40,12 +74,12 @@ def find(search, locale='en'):
     response = requests.get(SEARCH_URL, params=payload)
 
     if response.status_code == requests.codes.ok:
-        if len(response.text) > 2:
+        if len(response.text) > 2:  # not an empty array
             return response.json()
         else:
-            return 'This person does not exist'
+            raise NoResultError(search)
     else:
-        return 'External service not responding'
+        raise ServiceNotResponding
 
 
 def has_photo(sciper):
@@ -74,3 +108,74 @@ def __is_sciper(sciper):
         if 100000 < sciper < 999999:
             return True
     return False
+
+
+def find_first(search, format_output=False, **kwargs):
+    try:
+        res = find(search, **kwargs)[0]
+    except (NoResultError, ServiceNotResponding) as e:
+        return str(e)
+    except ConnectionError:
+        return h('No connection, please check that you are connected', YELLOW)
+    if format_output:
+        return pretty_print(res, **kwargs)
+    else:
+        return res
+
+
+def find_all(search, format_output=True, **kwargs):
+    try:
+        res = find(search, *kwargs)
+    except (NoResultError, ServiceNotResponding) as e:
+        return h(str(e), **kwargs)
+    except requests.exceptions.ConnectionError as e:
+        return h('No connection, please check that you are connected', YELLOW, **kwargs)
+    if format_output:
+        output = ''
+        for i, r in enumerate(res):
+            output += h(f'\n\n===== Result {i} =====\n', BLUE, **kwargs)
+            output += pretty_print(r, search=search, **kwargs)
+        return output
+    else:
+        return res
+
+
+def pretty_print(people: dict, **kwargs):
+    output = h('\n--- General info ---\n', GREEN, **kwargs)
+    output += '\n'.join(enumerate_properties(people, PP_PRINT, **kwargs)) + '\n'
+    for i, accred in enumerate(people.get(ACCREDS)):
+        output += h('\n--- Accred {i+1} ---\n', GREEN, **kwargs)
+        output += '\n'.join(enumerate_properties(accred, PP_PRINT_ACCREDS, **kwargs)) + '\n'
+    return output
+
+
+def enumerate_properties(obj, key_list, search, highlight=False):
+    max_w = max([len(k) for k in key_list])
+    for key in key_list:
+        value = obj.get(key)
+        if value:
+            if isinstance(value, list):
+                yield f'{key.capitalize().ljust(max_w)}: {", ".join(value)}'
+                return
+            if key == 'address':
+                value = value.replace('$', '\n'+' '*(max_w+1))
+            if highlight:
+                value = highlight_text(value, search)
+                for term in search.split():
+                    value = value.replace(term, h(term, RED))
+            yield f'{key.capitalize().ljust(max_w)}: {value}'
+
+
+def highlight_text(value, search):
+    for term in search.split():
+        matches = re.findall(term, value, re.I)
+        for match in matches:
+            value = value.replace(match, h(match, RED))
+    return value
+
+
+def h(text, color=RED, highlight=True, **kwargs):
+    if highlight:
+        return f'{color}{text}{COLOR_RESET}'
+    else:
+        return text
