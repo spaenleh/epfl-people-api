@@ -25,6 +25,7 @@ setup(
     entry_points={
         "console_scripts": [
             f"{PACKAGE_NAME}={PACKAGE_NAME}.__main__:main",
+            f"{PACKAGE_NAME}_pretty={PACKAGE_NAME}.__main__:main_highlighted",
         ]
     },
 )

@@ -2,11 +2,19 @@ import sys
 import epflpeople
 
 
-def main(search_term):
+def main():
+    print('Running EPFL People without highlighting')
+    search_term = input('Find : ')
     if search_term:
-        print(epflpeople.find(search_term))
+        print(epflpeople.find_all(search_term, format_output=True, highlight=False))
+
+
+def main_highlighted():
+    print('Running EPFL People with highlighting')
+    search_term = input('Find : ')
+    if search_term:
+        print(epflpeople.find_all(search_term, format_output=True, highlight=True))
 
 
 if __name__ == '__main__':
-    print(sys.argv)
-    main(sys.argv)
+    main_highlighted()
