@@ -19,7 +19,8 @@ RE_VERSION_NUMBER = r"^\w*-([\da-z]+.[\da-z]+.[\da-z]+)"
 def main(mode):
     create_dist_dir()
     print(f'deploying as {mode}')
-    version_path = subprocess.check_output(f"find {os.getcwd()} -iname VERSION".split(), encoding='utf-8').strip()
+    res = subprocess.check_output(f"find {os.getcwd()} -iname VERSION -not -path build".split(), encoding='utf-8').splitlines()
+    version_path = res[0].strip()
     version = Path(version_path).read_text().strip()
 
     # rotating the versions
