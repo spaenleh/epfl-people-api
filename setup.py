@@ -17,6 +17,7 @@ setup(
     description="EPFL People API wrapper for python",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
+    url="https://github.com/spaenleh/epfl-people-api",
     author="spaenleh",
     author_email="spaenleh@gmail.com",
     classifiers=["License :: OSI Approved :: MIT License"],

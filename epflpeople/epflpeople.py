@@ -1,6 +1,6 @@
 import re
 import requests
-from errors import *
+from .errors import *
 
 SEARCH_URL = 'https://search.epfl.ch/json/ws_search.action'
 PHOTO_URL = 'https://people.epfl.ch/private/common/photos/links/'
