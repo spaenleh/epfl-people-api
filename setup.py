@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pathlib
 from setuptools import setup
 
@@ -13,12 +15,10 @@ setup(
     description="EPFL People API wrapper for python",
     long_description=README,
     long_description_content_type="text/markdown",
-    # TODO: add project url on Github
-    url="",
+    url="https://github.com/spaenleh/epfl-people-api",
     author="spaenleh",
     author_email="spaenleh@gmail.com",
-    license="MIT",
-    classifiers=["License :: OSI Approved :: GNU General Public License v3 (GPLv3)"],
+    classifiers=["License :: OSI Approved :: MIT License"],
     packages=[PACKAGE_NAME],
     include_package_data=True,
     install_requires=["requests"],
