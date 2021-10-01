@@ -144,7 +144,7 @@ def pretty_print(people: dict, **kwargs):
     output = h('\n--- General info ---\n', GREEN, **kwargs)
     output += '\n'.join(enumerate_properties(people, PP_PRINT, **kwargs)) + '\n'
     for i, accred in enumerate(people.get(ACCREDS)):
-        output += h('\n--- Accred {i+1} ---\n', GREEN, **kwargs)
+        output += h(f'\n--- Accred {i+1} ---\n', GREEN, **kwargs)
         output += '\n'.join(enumerate_properties(accred, PP_PRINT_ACCREDS, **kwargs)) + '\n'
     return output
 

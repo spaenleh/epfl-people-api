@@ -1,5 +1,5 @@
 import sys
-import epflpeople
+from . import epflpeople
 
 
 def main():
