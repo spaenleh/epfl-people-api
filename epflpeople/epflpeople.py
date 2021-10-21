@@ -2,7 +2,7 @@ import re
 import requests
 from .errors import *
 
-SEARCH_URL = 'https://search.epfl.ch/json/ws_search.action'
+SEARCH_URL = 'https://search-api.epfl.ch/api/ldap'
 PHOTO_URL = 'https://people.epfl.ch/private/common/photos/links/'
 
 PP_PRINT = [
