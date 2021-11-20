@@ -45,7 +45,7 @@ def find_by_sciper(sciper, locale='en'):
     :param locale: response in english ('en') or in french ('fr')
     :return: Person info if the person is found else an error string explaining the problem
     """
-    if not __is_sciper(sciper):
+    if not is_sciper(sciper):
         return 'Expected sciper number but found ' + repr(sciper)
     payload = {'q': sciper, 'request_locale': locale}
 
@@ -57,7 +57,7 @@ def find_by_sciper(sciper, locale='en'):
         if len(response.text) > 2:
             return response.json()
         else:
-            raise NoResultError
+            raise NoResultError(sciper)
     else:
         raise ServiceNotResponding
 
@@ -97,7 +97,7 @@ def has_photo(sciper):
         return None
 
 
-def __is_sciper(sciper):
+def is_sciper(sciper):
     """
     Checks if the given argument is a valid Sciper number
     :param sciper: sciper to check
@@ -133,7 +133,7 @@ def find_all(search, format_output=True, **kwargs):
     if format_output:
         output = ''
         for i, r in enumerate(res):
-            output += h(f'\n\n===== Result {i} =====\n', BLUE, **kwargs)
+            output += h(f'\n===== Result {i} =====\n', BLUE, **kwargs)
             output += pretty_print(r, search=search, **kwargs)
         return output
     else:
